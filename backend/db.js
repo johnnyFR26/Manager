@@ -1,5 +1,7 @@
-import 'dotenv/config'
-import postgres from "postgres";
+import postgres from 'postgres';
+import { config } from 'dotenv';
+
+config();
 
 let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
 
@@ -14,3 +16,10 @@ export const sql = postgres({
     options: `project=${ENDPOINT_ID}`,
   },
 });
+
+async function getPgVersion() {
+  const result = await sql`select version()`;
+  console.log(result);
+}
+
+getPgVersion();

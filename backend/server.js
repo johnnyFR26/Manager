@@ -1,8 +1,8 @@
-const express = require('express');
-const { sequelize } = require('@neonjs/core');
-const cors = require('cors');
-const clientRouter = require('./routes/clientRoutes');
-const { Client } = require('./models');
+import express from 'express';
+//import { sequelize } from '@neonjs/core';
+import cors from 'cors';
+import clientRouter from './routes/clientRoutes.js';
+import { Client } from './models';
 
 const app = express();
 app.use(cors());
