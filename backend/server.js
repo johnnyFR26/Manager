@@ -1,8 +1,7 @@
 import express from 'express';
-//import { sequelize } from '@neonjs/core';
 import cors from 'cors';
 import clientRouter from './routes/clientRoutes.js';
-import { Client } from './models';
+import { sql } from './db.js'; // Importe a função sql do seu arquivo db.js
 
 const app = express();
 app.use(cors());
@@ -11,16 +10,11 @@ app.use(express.json());
 // Define a porta do servidor
 const PORT = process.env.PORT || 3000;
 
-// Conecta-se ao banco de dados Neon
-sequelize.sync()
-  .then(() => {
-    console.log('Connected to Neon database');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
-
 // Define as rotas para manipular os clientes
+app.use((req, res, next) => {
+  req.sql = sql; // Adicione o objeto sql (conexão com o banco de dados) ao objeto de solicitação
+  next();
+});
 app.use(clientRouter);
 
 // Inicia o servidor

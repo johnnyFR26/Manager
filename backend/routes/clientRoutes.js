@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { Client } = require('../models');
+import { sql } from '../db.js'; // Importe a função sql do seu arquivo db.js
 
 // GET all clients
 router.get('/clients', async (req, res) => {
   try {
-    const clients = await Client.findAll();
+    const clients = await req.sql`SELECT * FROM clients`;
     res.json(clients);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -14,32 +14,31 @@ router.get('/clients', async (req, res) => {
 
 // POST a new client
 router.post('/clients', async (req, res) => {
-  const { email, telefone, nome, dataContratacao, checklist, observacoes } = req.body;
+  const { email, telefone, name, date, checklist, observation } = req.body;
   try {
-    const newClient = await Client.create({ email, telefone, nome, dataContratacao, checklist, observacoes });
-    res.status(201).json(newClient);
+    const newClient = await req.sql`
+      INSERT INTO clients (email, telefone, nome, data_contratacao, checklist, observacoes)
+      VALUES (${email}, ${telefone}, ${name}, ${date}, ${checklist}, ${observation})
+      RETURNING *`;
+    res.status(201).json(newClient[0]);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-// GET a client by ID
-router.get('/clients/:id', getClient, (req, res) => {
-  res.json(res.client);
-});
 
-// Middleware to get a client by ID
-async function getClient(req, res, next) {
+// GET a client by ID
+router.get('/clients/:id', async (req, res) => {
   try {
-    const client = await Client.findByPk(req.params.id);
-    if (client == null) {
+    const client = await req.sql`SELECT * FROM clients WHERE id = ${req.params.id}`;
+    if (client.length === 0) {
       return res.status(404).json({ message: 'Client not found' });
     }
-    res.client = client;
-    next();
+    res.json(client[0]);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
-}
+});
 
-module.exports = router;
+//module.exports = router;
+export default router;

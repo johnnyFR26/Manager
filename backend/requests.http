@@ -1,1 +1,12 @@
-POST 
+POST http://localhost:3000/clients
+Content-Type: application/json
+
+{
+  "email": "novo_cliente@example.com",
+  "telefone": "(99) 99999-9999",
+  "id": "0001",
+  "name": "Novo Cliente",
+  "date": "2024-02-25",
+  "checklist": ["Algum texto aqui"],
+  "observation": "Novo cliente adicionado via requisição HTTP."
+}
