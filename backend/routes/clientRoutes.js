@@ -17,7 +17,7 @@ router.post('/clients', async (req, res) => {
   const { email, telefone, name, date, checklist, observation } = req.body;
   try {
     const newClient = await req.sql`
-      INSERT INTO clients (email, telefone, nome, data_contratacao, checklist, observacoes)
+      INSERT INTO clients (email, telefone, name, date, checklist, observation)
       VALUES (${email}, ${telefone}, ${name}, ${date}, ${checklist}, ${observation})
       RETURNING *`;
     res.status(201).json(newClient[0]);
