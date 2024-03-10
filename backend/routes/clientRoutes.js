@@ -39,6 +39,23 @@ router.get('/clients/:id', async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 });
+// DELETE a client by ID
+router.delete('/clients/:id', async (req, res) => {
+  try {
+    const deletedClient = await req.sql`
+      DELETE FROM clients
+      WHERE id = ${req.params.id}
+      RETURNING *`;
+
+    if (deletedClient.length === 0) {
+      return res.status(404).json({ message: 'Client not found for deletion' });
+    }
+
+    res.json({ message: 'Client deleted successfully', deletedClient: deletedClient[0] });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+});
 
 //module.exports = router;
 export default router;

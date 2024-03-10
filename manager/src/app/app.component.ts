@@ -8,14 +8,19 @@ import { ClientService } from './client-service.service';
 import { Client } from './client.model';
 import { CommonModule } from '@angular/common';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FormsModule, HttpClientModule, CommonModule, MatTableModule, MatInputModule, MatButtonModule, MatDatepickerModule],
+  imports: [FormsModule, HttpClientModule, 
+    CommonModule, MatTableModule, 
+    MatInputModule, MatButtonModule, 
+    MatDatepickerModule, ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  providers: [provideNativeDateAdapter()]
 })
 
 export class AppComponent implements OnInit {
@@ -25,11 +30,11 @@ export class AppComponent implements OnInit {
     telefone: '',
     name: '',
     date: '',
-    checklist: ['teste do cliente'],
+    checklist: ['contratou mesa', 'novo painel'],
     observation: '',
-    id: 3,
+    id: 4,
   };
-  displayedColumns: string[] = ['id', 'name', 'email', 'telefone'];
+  displayedColumns: string[] = ['id', 'name', 'email', 'telefone','observation' ];
   constructor(private clientService: ClientService) {}
 
   ngOnInit(): void {
