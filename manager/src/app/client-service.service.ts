@@ -19,4 +19,13 @@ export class ClientService {
   getClients(): Observable<Client[]> {
     return this.http.get<Client[]>(this.apiUrl);
   }
+
+  getClientByid(id:number): Observable<Client>{
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.get<Client>(url);
+  }
+
+  getClientsByPlan(plan: string): Observable<Client[]> {
+    return this.http.get<Client[]>(`${this.apiUrl}/plan/${plan}`);
+  }
 }

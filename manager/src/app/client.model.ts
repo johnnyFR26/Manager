@@ -6,5 +6,6 @@ export interface Client {
     date: string;
     checklist: string[];
     observation: string;
+    plan: string;
   }
   

@@ -19,14 +19,41 @@
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 
+  <!-- <mat-form-field class="example-full-width">
+    <mat-label>Checklist</mat-label>
+    <mat-chip-set aria-orientation="horizontal">
+      <mat-chip *ngFor="let item of client.checklist" (remove)="removeChecklistItem(item)">
+        {{ item }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-set>
+    <input matInput placeholder="Adicionar item ao checklist" [matChipInputFor]="chipSet"  [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addChecklistItem($event)">
+  </mat-form-field> -->
+
   <mat-form-field class="example-full-width">
     <mat-label >Observações</mat-label>
     <textarea matInput placeholder="Alguma Observação..." [(ngModel)]="client.observation" [ngModelOptions]="{standalone: true}" required></textarea>
   </mat-form-field>
-  
 
+  <mat-form-field>
+    <mat-label>Plano do cliente</mat-label>
+    <mat-select [(ngModel)]="client.plan" name="plan" required>
+      <mat-option value="mensal">Mensal</mat-option>
+      <mat-option value="Anual">Anual</mat-option>
+    </mat-select>
+  </mat-form-field>
+  
+  
+  
   <button mat-raised-button color="primary" type="submit">Adicionar Cliente</button>
 </form>
+<mat-form-field>
+  <mat-label>Selecionar Plano</mat-label>
+  <mat-select (selectionChange)="onPlanSelectionChange($event.value)">
+    <mat-option value="mensal">Mensal</mat-option>
+    <mat-option value="anual">Anual</mat-option>
+  </mat-select>
+</mat-form-field>
 <!-- Importações do Angular Material no seu HTML -->
 <table mat-table [dataSource]="clients" class="mat-elevation-z8">
 
@@ -59,6 +86,13 @@
   <!-- Linhas da tabela -->
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
 </table>
 
+<mat-form-field appearance="fill">
+  <mat-label>ID do Cliente</mat-label>
+  <input matInput type="number" [(ngModel)]="client.id" placeholder="id do cliente">
+</mat-form-field>
+
+<button mat-raised-button color="primary" (click)="getClientById(client.id)">Buscar por ID</button>
+
+<router-outlet></router-outlet>

@@ -8,7 +8,8 @@ CREATE TABLE clients (
     name VARCHAR(100) NOT NULL,
     date DATE NOT NULL,
     checklist TEXT[],
-    observation TEXT
+    observation TEXT,
+    plan VARCHAR(10) NOT NULL
 );
 `.then(() => {
     console.log("created table!")

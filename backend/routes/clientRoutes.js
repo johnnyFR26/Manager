@@ -14,11 +14,11 @@ router.get('/clients', async (req, res) => {
 
 // POST a new client
 router.post('/clients', async (req, res) => {
-  const { email, telefone, name, date, checklist, observation } = req.body;
+  const { email, telefone, name, date, checklist, observation, plan } = req.body; // Inclua 'plan' nos parâmetros
   try {
     const newClient = await req.sql`
-      INSERT INTO clients (email, telefone, name, date, checklist, observation)
-      VALUES (${email}, ${telefone}, ${name}, ${date}, ${checklist}, ${observation})
+      INSERT INTO clients (email, telefone, name, date, checklist, observation, plan) -- Inclua 'plan' aqui
+      VALUES (${email}, ${telefone}, ${name}, ${date}, ${checklist}, ${observation}, ${plan}) -- Inclua 'plan' aqui
       RETURNING *`;
     res.status(201).json(newClient[0]);
   } catch (err) {
@@ -26,6 +26,15 @@ router.post('/clients', async (req, res) => {
   }
 });
 
+router.get('/clients/plan/:plan', async (req, res) => {
+  const { plan } = req.params;
+  try {
+    const clients = await req.sql`SELECT * FROM clients WHERE plan = ${plan}`;
+    res.json(clients);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // GET a client by ID
 router.get('/clients/:id', async (req, res) => {
@@ -39,6 +48,7 @@ router.get('/clients/:id', async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 });
+
 // DELETE a client by ID
 router.delete('/clients/:id', async (req, res) => {
   try {

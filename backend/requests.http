@@ -8,7 +8,8 @@ Content-Type: application/json
   "id": "0001",
   "name": "Novo Cliente",
   "observation": "Novo cliente adicionado via requisição HTTP.",
-  "telefone": "(99) 99999-9999"
+  "telefone": "(99) 99999-9999",
+  "plan": "Anual"
 }
 
 ###
@@ -18,5 +19,16 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:3000/clients/1
+DELETE http://localhost:3000/clients/8
 Content-Type: application/json
+
+###
+
+GET http://localhost:3000/clients/8
+Content-Type: application/json
+
+###
+
+GET http://localhost:3000/clients/plan/mensal
+Content-Type: application/json
+
