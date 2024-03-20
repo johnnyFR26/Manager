@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTabsModule} from '@angular/material/tabs';
+import { MatDialog } from '@angular/material/dialog';
+
 
 
 @Component({
@@ -18,7 +20,8 @@ import {MatTabsModule} from '@angular/material/tabs';
   standalone: true,
   imports: [RouterOutlet, FormsModule,MatCardModule,
     MatFormFieldModule,MatInputModule,
-   MatButtonModule ,MatListModule,CommonModule,MatExpansionModule,MatIconModule,MatTabsModule],
+   MatButtonModule ,MatListModule,CommonModule,
+   MatExpansionModule,MatIconModule,MatTabsModule,],
   template: `
   
   <mat-card id="dashboard">
@@ -92,6 +95,8 @@ import {MatTabsModule} from '@angular/material/tabs';
   styleUrl: './to-do-list.component.scss'
 })
 export class ToDoListComponent {
+
+  
 
 
   title = 'To do List';

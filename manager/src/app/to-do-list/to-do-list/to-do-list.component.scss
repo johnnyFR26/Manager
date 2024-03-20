@@ -1,0 +1,24 @@
+button {
+    margin-left: 10px;
+  }
+  
+
+
+.dateTask{
+    background-color: aqua;
+    border-radius: 10%, 10%,10%,10% solid;
+    
+  }
+
+.overdue {
+    border: 1px solid red;
+    
+  }
+  
+.due-tomorrow {
+    border: 1px solid yellow;
+  }
+
+.taskname{
+  padding-left: 18px;
+}

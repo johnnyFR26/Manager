@@ -33,7 +33,7 @@
 
   <mat-form-field class="example-full-width">
     <mat-label >Observações</mat-label>
-    <textarea matInput placeholder="Alguma Observação..." [(ngModel)]="client.observation" [ngModelOptions]="{standalone: true}" required></textarea>
+    <textarea matInput placeholder="Alguma Observação..." [(ngModel)]="client.observation" [ngModelOptions]="{standalone: true}" ></textarea>
   </mat-form-field>
 
   <mat-form-field>
@@ -41,6 +41,7 @@
     <mat-select [(ngModel)]="client.plan" name="plan" required>
       <mat-option value="mensal">Mensal</mat-option>
       <mat-option value="Anual">Anual</mat-option>
+      <mat-option value="Mesa">Mesa</mat-option>
     </mat-select>
   </mat-form-field>
   
@@ -52,7 +53,7 @@
   <mat-label>Selecionar Plano</mat-label>
   <mat-select (selectionChange)="onPlanSelectionChange($event.value)">
     <mat-option value="mensal">Mensal</mat-option>
-    <mat-option value="anual">Anual</mat-option>
+    <mat-option value="Anual">Anual</mat-option>
   </mat-select>
 </mat-form-field>
 <!-- Importações do Angular Material no seu HTML -->
@@ -95,5 +96,8 @@
 </mat-form-field>
 
 <button mat-raised-button color="primary" (click)="getClientById(client.id)">Buscar por ID</button>
+
+<button (click)="openWebPage()">Trello2.0</button>
+
 
 </router-outlet>

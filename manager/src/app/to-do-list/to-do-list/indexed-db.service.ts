@@ -36,7 +36,6 @@ export class IndexedDbService {
     const transaction = this.db.transaction('tasks', 'readwrite');
     const store = transaction.objectStore('tasks');
 
-    // Gera um ID único para a tarefa
     task.id = uuidv4();
 
     store.add(task);

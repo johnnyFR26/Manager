@@ -145,4 +145,12 @@ export class AppComponent implements OnInit {
   onPlanSelectionChange(plan: string): void {
     this.loadClientsByPlan(plan);
   }
+
+  openWebPage(): void {
+    // Defina o link da página web que você deseja abrir
+    const url = 'https://9000-monospace-my-todolist-1710559675928.cluster-hf4yr35cmnbd4vhbxvfvc6cp5q.cloudworkstations.dev/?monospaceUid=660900';
+
+    // Abra uma nova página da web
+    window.open(url, '_blank');
+  }
 }

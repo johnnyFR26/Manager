@@ -5,4 +5,6 @@ import { AppComponent } from './app.component';
 export const routes: Routes = [
     {path: 'clients', component: AppComponent},
     { path: 'tasks', component: ToDoListComponent },
+    //{path: '', component: AppComponent},
+
 ];
