@@ -14,6 +14,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ToDoListComponent } from './to-do-list/to-do-list/to-do-list.component';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-root',
@@ -27,7 +29,9 @@ import { ToDoListComponent } from './to-do-list/to-do-list/to-do-list.component'
     MatButtonModule,
     MatDatepickerModule,
     MatChipsModule,
-    MatSelectModule,RouterLink,RouterLinkActive,RouterOutlet,ToDoListComponent
+    MatSelectModule,RouterLink,
+    RouterLinkActive,RouterOutlet,
+    ToDoListComponent, 
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -40,7 +44,7 @@ export class AppComponent implements OnInit {
     telefone: '',
     name: '',
     date: '',
-    checklist: [' '],
+    checklist: [''],
     observation: '',
     id: 0,
     plan: '',
@@ -49,12 +53,15 @@ export class AppComponent implements OnInit {
   
   
 
-  constructor(private clientService: ClientService) {}
+  constructor(private clientService: ClientService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadClients();
+    
   }
+  
 
+  
   separatorKeysCodes: string[] = ['ENTER', 'COMMA'];
 
   addChecklistItem(event: MatChipInputEvent): void {
@@ -95,7 +102,7 @@ export class AppComponent implements OnInit {
             this.client.name = '';
             this.client.observation = '';
             this.client.telefone = '';
-            this.client.plan = ''; // Limpar a seleção de plano
+            this.client.plan = ''; 
             this.loadClients();
           },
           (error) => {

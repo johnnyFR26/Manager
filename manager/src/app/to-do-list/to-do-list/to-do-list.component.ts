@@ -11,7 +11,8 @@ import { CommonModule } from '@angular/common';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTabsModule} from '@angular/material/tabs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { TaskDialogComponent, TaskDialogResult } from '../../task-dialog/task-dialog.component';
 
 
 
@@ -23,25 +24,15 @@ import { MatDialog } from '@angular/material/dialog';
    MatButtonModule ,MatListModule,CommonModule,
    MatExpansionModule,MatIconModule,MatTabsModule,],
   template: `
+
+<button (click)="newTask()" mat-button>
+    <mat-icon>add</mat-icon> Add Task
+  </button>
   
-  <mat-card id="dashboard">
-    <mat-card-title>
-      {{title}}
-    </mat-card-title>
-    <mat-form-field>
-      <input matInput [(ngModel)]="taskName" placeholder="Nome da tarefa">
-    </mat-form-field>
-    <mat-form-field>
-      <textarea matInput
-      [(ngModel)]="taskDescription" placeholder="Descrição da tarefa">
-    </textarea>
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput [(ngModel)]="taskDeadline" placeholder="Prazo da tarefa" type="date">
-  </mat-form-field>
+  
  
   
-  <button [disabled]="taskDeadline == ''" mat-raised-button color="primary" (click)="addTask()" >Adicionar Tarefa</button>
+  <!-- <button [disabled]="taskDeadline == ''" mat-raised-button color="primary" (click)="addTask()" >Adicionar Tarefa</button> -->
   
 
 
@@ -95,65 +86,48 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './to-do-list.component.scss'
 })
 export class ToDoListComponent {
-
-  
-
-
-  title = 'To do List';
+  title = 'Lista de tarefas';
   tasks: any[] = [];
   taskName = '';
   taskDescription = '';
   taskDeadline = '';
   taskImage: Blob | null = new Blob();
-  task:object = {};
-  completed:boolean = true
-  taskId:string = ''
+  taskId: string = '';
 
-  constructor(private IndexedDbService: IndexedDbService) {}
+  constructor(private indexedDbService: IndexedDbService, private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.IndexedDbService.getTasks().then(tasks =>
-       this.tasks = tasks);
+    this.indexedDbService.getTasks().then(tasks => this.tasks = tasks);
   }
 
-  
-  
-  addTask() {
-    const task = {
-      id: this.taskId,
-      name: this.taskName, 
-      description: this.taskDescription, 
-      deadline: new Date(this.taskDeadline), 
-      image: this.taskImage,
-      completed: false};
-      
-    this.tasks.push(task);
-    this.IndexedDbService.addTask(task);
-    this.taskName = '';
-    this.taskDescription = '';
-    this.taskDeadline = '';
-    this.taskImage = null;
-    console.log(task)
-    console.log(this.tasks.indexOf(task))
-    
+  newTask(): void {
+    const dialogRef = this.dialog.open(TaskDialogComponent, {
+      width: '270px',
+      data: { task: {} }
+    });
+
+    dialogRef.afterClosed().subscribe((result: TaskDialogResult | undefined) => {
+      if (result) {
+        const task = result.task;
+        this.tasks.push(task);
+        this.indexedDbService.addTask(task);
+      }
+    });
   }
 
-  removeTask(taskId: number, completed: boolean) {
-    this.IndexedDbService.updateTaskCompletedStatus(taskId, completed)
-      .then(() => {
-        console.log('Status da tarefa atualizado no IndexedDB');
-        // Atualize a exibição após atualizar o status da tarefa no IndexedDB
-        const taskToUpdate = this.tasks.find(task => task.id === taskId);
-        if (taskToUpdate) {
-          taskToUpdate.completed = completed;
-        }
-      })
-      .catch((error) => {
-        console.error('Erro ao atualizar o status da tarefa no IndexedDB:', error);
-      });
+  removeTask(taskId: number, completed: boolean): void {
+    this.indexedDbService.updateTaskCompletedStatus(taskId, completed).then(() => {
+      console.log('Status da tarefa atualizado no IndexedDB');
+      const taskToUpdate = this.tasks.find(task => task.id === taskId);
+      if (taskToUpdate) {
+        taskToUpdate.completed = completed;
+      }
+    }).catch((error) => {
+      console.error('Erro ao atualizar o status da tarefa no IndexedDB:', error);
+    });
   }
 
-  onImageChange(event:any) {
+  onImageChange(event: any): void {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -162,24 +136,21 @@ export class ToDoListComponent {
     reader.readAsArrayBuffer(file);
   }
 
-  isOverdue(taskDeadline: Date) {
+  isOverdue(taskDeadline: Date): boolean {
     return new Date() > new Date(taskDeadline);
   }
 
-  isDueTomorrow(taskDeadline: Date) {
+  isDueTomorrow(taskDeadline: Date): boolean {
     const today = new Date();
     const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
     return tomorrow.toDateString() === new Date(taskDeadline).toDateString();
   }
 
-   getPendingTasks() {
+  getPendingTasks(): any[] {
     return this.tasks.filter(task => !task.completed);
   }
-  
-  getCompletedTasks() {
+
+  getCompletedTasks(): any[] {
     return this.tasks.filter(task => task.completed);
   }
-
-  
-
 }
