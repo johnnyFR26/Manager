@@ -22,3 +22,8 @@ button {
 .taskname{
   padding-left: 18px;
 }
+
+mat-toolbar{
+  display: grid;
+  align-items: 3fr, 1fr;
+}

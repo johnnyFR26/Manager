@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IndexedDbService,  } from './indexed-db.service';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
@@ -13,6 +13,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TaskDialogComponent, TaskDialogResult } from '../../task-dialog/task-dialog.component';
+import { MatToolbar } from '@angular/material/toolbar';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 
@@ -22,20 +24,18 @@ import { TaskDialogComponent, TaskDialogResult } from '../../task-dialog/task-di
   imports: [RouterOutlet, FormsModule,MatCardModule,
     MatFormFieldModule,MatInputModule,
    MatButtonModule ,MatListModule,CommonModule,
-   MatExpansionModule,MatIconModule,MatTabsModule,],
+   MatExpansionModule,MatIconModule,MatTabsModule,MatToolbar,],
   template: `
 
-<button (click)="newTask()" mat-button>
-    <mat-icon>add</mat-icon> Add Task
-  </button>
-  
-  
- 
-  
-  <!-- <button [disabled]="taskDeadline == ''" mat-raised-button color="primary" (click)="addTask()" >Adicionar Tarefa</button> -->
-  
 
+<mat-toolbar color="primary">
+  <button (click)="newTask()" mat-button>
+      <mat-icon>add</mat-icon> Nova tarefa
+    </button> 
 
+    <p> tarefas concluidas: {{getCompletedTasks().length}}</p>
+
+</mat-toolbar>
   
 <mat-tab-group>
   <mat-tab label="Pendentes">
@@ -46,7 +46,7 @@ import { TaskDialogComponent, TaskDialogResult } from '../../task-dialog/task-di
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span class="dateTask"> {{task.deadline | date: 'dd/MM/yyyy'}}</span>
-              <span class="taskname">{{task.name}}</span> 
+              <span class="taskname">{{task.title}}</span> 
             </mat-panel-title>
             <mat-panel-description>
               <button mat-stroked-button color="primary" (click)="removeTask(task.id, true)">concluída
@@ -68,7 +68,7 @@ import { TaskDialogComponent, TaskDialogResult } from '../../task-dialog/task-di
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span class="dateTask"> {{task.deadline | date: 'dd/MM/yyyy'}}</span>
-              <span class="taskname">{{task.name}}</span> 
+              <span class="taskname">{{task.title}}</span> 
             </mat-panel-title>
             <mat-panel-description>
               <mat-icon>check_circle</mat-icon>
@@ -82,17 +82,18 @@ import { TaskDialogComponent, TaskDialogResult } from '../../task-dialog/task-di
   </mat-tab>
 </mat-tab-group>
 
-  `,
+`,
   styleUrl: './to-do-list.component.scss'
 })
 export class ToDoListComponent {
-  title = 'Lista de tarefas';
+
+  private _snackBar = inject(MatSnackBar);
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
+  Title = 'Lista de tarefas';
   tasks: any[] = [];
-  taskName = '';
-  taskDescription = '';
-  taskDeadline = '';
-  taskImage: Blob | null = new Blob();
-  taskId: string = '';
 
   constructor(private indexedDbService: IndexedDbService, private dialog: MatDialog) {}
 
@@ -125,16 +126,9 @@ export class ToDoListComponent {
     }).catch((error) => {
       console.error('Erro ao atualizar o status da tarefa no IndexedDB:', error);
     });
+    this.openSnackBar('Tarefa concluída', 'Fechar');
   }
 
-  onImageChange(event: any): void {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.taskImage = new Blob([new Uint8Array((e.target?.result as ArrayBuffer))]);
-    };
-    reader.readAsArrayBuffer(file);
-  }
 
   isOverdue(taskDeadline: Date): boolean {
     return new Date() > new Date(taskDeadline);

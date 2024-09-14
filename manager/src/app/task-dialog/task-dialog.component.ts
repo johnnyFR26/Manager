@@ -26,17 +26,17 @@ import { Task } from '../to-do-list/to-do-list/Task.model';
   ],
   template: `
     <mat-form-field>
-      <mat-label>Title</mat-label>
+      <mat-label>Titulo</mat-label>
       <input matInput cdkFocusInitial [(ngModel)]="data.task.title" />
     </mat-form-field>
     
     <mat-form-field>
-      <mat-label>Description</mat-label>
+      <mat-label>Descriçao</mat-label>
       <textarea matInput [(ngModel)]="data.task.description"></textarea>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-label>Deadline</mat-label>
+      <mat-label>Prazo</mat-label>
       <input matInput [(ngModel)]="data.task.deadline" type="date" />
     </mat-form-field>
     
@@ -52,7 +52,7 @@ import { Task } from '../to-do-list/to-do-list/Task.model';
         <mat-icon>delete</mat-icon>
       </button>
     </div>
-  `,
+`,
   styleUrl: './task-dialog.component.scss'
 })
 export class TaskDialogComponent {
@@ -66,7 +66,7 @@ export class TaskDialogComponent {
   cancel(): void {
     this.data.task.title = this.backupTask.title;
     this.data.task.description = this.backupTask.description;
-    this.data.task.deadline = this.backupTask.deadline; // Restore the deadline as well
+    this.data.task.deadline = this.backupTask.deadline; 
     this.dialogRef.close(this.data);
   }
 }
